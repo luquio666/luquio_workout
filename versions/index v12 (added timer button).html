@@ -89,34 +89,6 @@
       while(cells.length%7!==0)cells.push(null);
       return cells;
     }
-    // Format helper that returns parts to render with fixed widths
-    function getHMSParts(total) {
-      const t = Math.max(0, Math.floor(Number(total) || 0));
-      const h = Math.floor(t / 3600);
-      const m = Math.floor((t % 3600) / 60);
-      const s = t % 60;
-      return {
-        h: String(h),                 // hours (no left pad)
-        m: String(m).padStart(2, '0'),// minutes (2 digits)
-        s: String(s).padStart(2, '0') // seconds (2 digits)
-      };
-    }
-    // Monospace, tabular numbers, fixed-width fields to prevent layout shift
-    function TimeDisplay({ seconds }) {
-      const { h, m, s } = getHMSParts(seconds);
-      return (
-        <div className="mt-1 text-xs text-gray-600 font-mono tabular-nums">
-          {/* Hours: allow to grow, align right */}
-          <span className="inline-block text-right min-w-[1ch]">{h}</span>
-          <span>h </span>
-          {/* Minutes/seconds: fixed 2ch to keep columns stable */}
-          <span className="inline-block text-right w-[2ch]">{m}</span>
-          <span>m </span>
-          <span className="inline-block text-right w-[2ch]">{s}</span>
-          <span>s</span>
-        </div>
-      );
-    }
 
     function isExerciseKey(k){ return !String(k).startsWith("_"); }
 
@@ -543,13 +515,13 @@
                         >
                           {isTimerRunning ? "Stop" : "Start Timer"}
                         </button>
-                        <TimeDisplay seconds={timerShownSeconds} />
+                        <div className="mt-1 text-xs text-gray-600">{formatHMS(timerShownSeconds)}</div>
                       </div>
                     ) : (
                       <div className="inline-flex flex-col items-end">
                         {getTimeSecondsFor(selectedKey) > 0
-                        ? <TimeDisplay seconds={getTimeSecondsFor(selectedKey)} />
-                        : <div className="text-xs text-gray-500 italic">No time recorded</div>}
+                          ? <div className="text-xs text-gray-700">{formatHMS(getTimeSecondsFor(selectedKey))}</div>
+                          : <div className="text-xs text-gray-500 italic">No time recorded</div>}
                       </div>
                     )}
                   </div>
